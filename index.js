@@ -6,7 +6,7 @@ const dns = require("dns");
 const bodyParser = require("body-parser");
 const url = require("url");
 var cache = require("memory-cache");
-const crypto = require("crypto");
+const validator = require("validator");
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -27,10 +27,8 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: "hello API" });
 });
 app.post("/api/shorturl", async function (req, res) {
-  const urlRegex =
-    /^https?:\/\/(?:www\.)?[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(?:\/[^\/]*)?$/gi;
   const { url = "" } = req.body;
-  const isUrlMatch = urlRegex.test(url);
+  const isUrlMatch = validator.isURL(url);
   if (!isUrlMatch) return res.status(400).json({ error: "invalid url" });
   dns.lookup(new URL(url).hostname, (error, ip, family) => {
     if (error || !ip) return res.status(400).json({ error: "invalid url" });
