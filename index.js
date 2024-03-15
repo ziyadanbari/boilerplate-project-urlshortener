@@ -34,9 +34,12 @@ app.post("/api/shorturl", async function (req, res) {
   if (!isUrlMatch) return res.status(400).json({ error: "invalid url" });
   dns.lookup(new URL(url).hostname, (error, ip, family) => {
     if (error || !ip) return res.status(400).json({ error: "invalid url" });
-    let randomInt = Math.floor(Math.random() * (100000 - 1) + 1);
-    newCache.put(randomInt, url);
-    return res.status(200).json({ origin_url: url, short_url: randomInt });
+    const keys = newCache.keys();
+    let key;
+    if (!keys.length) key = 1;
+    else key = parseInt(keys.slice(-1)[0]) + 1;
+    newCache.put(key, url);
+    return res.status(200).json({ origin_url: url, short_url: key });
   });
 });
 app.get("/api/shorturl/:key", async function (req, res) {
