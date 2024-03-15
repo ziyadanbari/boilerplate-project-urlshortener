@@ -39,7 +39,7 @@ app.post("/api/shorturl", async function (req, res) {
     if (!keys.length) key = 1;
     else key = parseInt(keys.slice(-1)[0]) + 1;
     newCache.put(key, url);
-    return res.status(200).json({ origin_url: url, short_url: key });
+    return res.status(200).json({ original_url: url, short_url: key });
   });
 });
 app.get("/api/shorturl/:key", async function (req, res) {
