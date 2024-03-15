@@ -29,7 +29,7 @@ app.get("/api/hello", function (req, res) {
 app.post("/api/shorturl", async function (req, res) {
   const { url = "" } = req.body;
   const isUrlMatch = validator.isURL(url);
-  if (!isUrlMatch) return res.status(400).json({ error: "invalid url" });
+  if (!isUrlMatch) return res.json({ error: "invalid url" });
   dns.lookup(new URL(url).hostname, (error, ip, family) => {
     if (error || !ip) return res.status(400).json({ error: "invalid url" });
     const keys = newCache.keys();
